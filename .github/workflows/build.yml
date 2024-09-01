@@ -10,6 +10,9 @@ jobs:
     name: Export XCFrameworks
     runs-on: macos-14
     steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
       - uses: actions/checkout@v2
         with:
           submodules: 'true'
@@ -18,13 +21,6 @@ jobs:
           sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
           xcode-select -p
           xcodebuild -version
-      - name: Setup Python
-        run: |
-          brew install python
-          python3 --version
-          python3 -m ensurepip
-          python3 -m disutils
-          pip3 --version
       - name: Export XCFrameworks
         run: |
           swift package --disable-sandbox BuildFFmpeg
