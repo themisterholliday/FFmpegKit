@@ -1,17 +1,16 @@
+name: Build and Export XCFrameworks
+
 on:
   push:
     branches:
-      - '*'
-  pull_request:
-    branches:
-      - '*'
+      - main
 
 jobs:
-  buidJoB:
-    name: buid
+  export_xcframeworks:
+    name: Export XCFrameworks
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v2
         with:
           submodules: 'true'
       - name: Set up Xcode
@@ -19,13 +18,20 @@ jobs:
           sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
           xcode-select -p
           xcodebuild -version
-      - name: Build
+      - name: Setup Python
         run: |
-          cd Demo
-          pod install
-          swift package BuildFFmpeg  -h
-          # swift run ffmpeg -h
-          # xcodebuild -workspace Demo.xcworkspace -scheme macOS
-          xcodebuild -workspace Demo.xcworkspace -scheme iOS -sdk iphonesimulator
-          # xcodebuild -workspace Demo.xcworkspace -scheme visonOS -sdk XRSimulator
-          # xcodebuild -workspace Demo.xcworkspace -scheme tvOS -sdk appletvsimulator
+          brew install python
+          python3 --version
+          python3 -m ensurepip
+          python3 -m disutils
+          pip3 --version
+      - name: Export XCFrameworks
+        run: |
+          swift package --disable-sandbox BuildFFmpeg
+          mkdir -p output
+          mv *.xcframework output/
+      - name: Upload XCFrameworks
+        uses: actions/upload-artifact@v2
+        with:
+          name: xcframeworks
+          path: output/*.xcframework
