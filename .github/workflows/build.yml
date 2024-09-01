@@ -20,7 +20,7 @@ jobs:
           xcodebuild -version
       - name: Setup Python
         run: |
-          python3 -m pip install distutils
+          brew install python-setuptools
       - name: Export XCFrameworks
         run: |
           swift package --disable-sandbox BuildFFmpeg
