@@ -8,7 +8,7 @@ on:
 jobs:
   export_xcframeworks:
     name: Export XCFrameworks
-    runs-on: macos-14
+    runs-on: macos-13
     steps:
       - uses: actions/setup-python@v5
         with:
