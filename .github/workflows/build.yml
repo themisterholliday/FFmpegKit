@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
       - uses: actions/checkout@v2
         with:
           submodules: 'true'
@@ -24,6 +24,7 @@ jobs:
       - name: Setup Python
         run: |
           python3 --version
+          brew install python-setuptools
       - name: Export XCFrameworks
         run: |
           swift package --disable-sandbox BuildFFmpeg enable-libsmbclient
