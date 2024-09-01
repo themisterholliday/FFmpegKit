@@ -10,6 +10,9 @@ jobs:
     name: Export XCFrameworks
     runs-on: macos-14
     steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.5'
       - uses: actions/checkout@v2
         with:
           submodules: 'true'
@@ -20,10 +23,10 @@ jobs:
           xcodebuild -version
       - name: Setup Python
         run: |
-          brew install python-setuptools
+          python3 --version
       - name: Export XCFrameworks
         run: |
-          swift package --disable-sandbox BuildFFmpeg
+          swift package --disable-sandbox BuildFFmpeg enable-libsmbclient
           mkdir -p output
           mv *.xcframework output/
       - name: Upload XCFrameworks
