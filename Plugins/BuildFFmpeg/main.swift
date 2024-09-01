@@ -110,7 +110,7 @@ extension Build {
     static func printHelp() {
         print("""
         Usage: swift package BuildFFmpeg [OPTION]...
-        Default Build: swift package --disable-sandbox BuildFFmpeg enable-libshaderc enable-vulkan enable-lcms2 enable-libdav1d enable-libplacebo enable-gmp enable-nettle enable-gnutls enbale-readline enable-libsmbclient enable-libsrt enable-libzvbi enable-libfreetype enable-libfribidi enable-libharfbuzz enable-libass enable-FFmpeg enable-libmpv
+        Default Build: swift package --disable-sandbox BuildFFmpeg enable-libshaderc enable-vulkan enable-lcms2 enable-libdav1d enable-libplacebo enable-gmp enable-nettle enable-gnutls enbale-readline enable-libsmbclient enable-libsrt enable-libzvbi enable-libfreetype enable-libfontconfig enable-libfribidi enable-libharfbuzz enable-libass enable-FFmpeg enable-libmpv
 
         Options:
             h, -h, --help       display this help and exit
@@ -165,7 +165,7 @@ enum Library: String, CaseIterable {
         case .libsrt:
             return "v1.5.3"
         case .libsmbclient:
-            return "samba-4.19.8"
+            return "samba-4.15.13"
         case .gnutls:
             return "3.8.3"
         case .nettle:
