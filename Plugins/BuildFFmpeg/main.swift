@@ -165,7 +165,7 @@ enum Library: String, CaseIterable {
         case .libsrt:
             return "v1.5.3"
         case .libsmbclient:
-            return "samba-4.15.13"
+            return "samba-4.19.8"
         case .gnutls:
             return "3.8.3"
         case .nettle:
