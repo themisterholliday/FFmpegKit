@@ -22,6 +22,11 @@ jobs:
           brew update
           brew install python@3.11  # Install Python 3.11 using Homebrew
           brew link --overwrite python@3.11
+
+      - name: Set Up Python Virtual Environment
+        run: |
+          python3 -m venv venv  # Create a virtual environment
+          source venv/bin/activate  # Activate the virtual environment
           python3 -m pip install --upgrade pip setuptools wheel  # Upgrade pip and install essential tools
 
       - name: Verify Python Environment
