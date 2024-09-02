@@ -34,4 +34,5 @@ jobs:
 
       - name: Build FFmpeg with Swift Package
         run: |
-          swift package BuildFFmpeg platforms=ios,isimulator,tvos,tvsimulator
+          cd ${{ github.workspace }}  # Ensure we are in the GitHub Actions workspace
+          swift package BuildFFmpeg platforms=ios,isimulator,tvos,tvsimulator notRecompile
