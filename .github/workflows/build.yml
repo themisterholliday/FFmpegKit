@@ -13,7 +13,7 @@ jobs:
     name: Build
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@v2 # Correct syntax to checkout code
+      - uses: actions/checkout@v2
         with:
           submodules: true
 
@@ -21,6 +21,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11-dev'
+
+      - name: Install Dependencies for FFmpegKit
+        run: |
+          brew install gmp nettle smbclient # Install necessary dependencies
 
       - name: Set up Xcode
         run: |
@@ -30,10 +34,11 @@ jobs:
 
       - name: Verify Python Environment
         run: |
+          python3 -m pip install --upgrade pip
           python3 -m pip list
           python3 -m pip show setuptools
 
       - name: Build FFmpeg with Swift Package
         run: |
           cd ${{ github.workspace }}  # Ensure we are in the GitHub Actions workspace
-          swift package --disable-sandbox BuildFFmpeg enable-gmp enable-nettle enable-libsmbclient
+          swift build --disable-sandbox BuildFFmpeg enable-gmp enable-nettle enable-libsmbclient
