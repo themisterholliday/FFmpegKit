@@ -37,7 +37,6 @@ jobs:
           python3 -m venv venv  # Create a virtual environment
           source venv/bin/activate  # Activate the virtual environment
           python3 -m pip install --upgrade pip setuptools wheel  # Upgrade pip, setuptools, wheel
-          python3 -m pip install distutils  # Explicitly install distutils
 
       - name: Verify Python Environment
         run: |
