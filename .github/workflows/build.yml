@@ -47,3 +47,10 @@ jobs:
           source venv/bin/activate  # Activate the virtual environment
           cd ${{ github.workspace }}  # Ensure we are in the GitHub Actions workspace
           swift package --disable-sandbox BuildFFmpeg enable-libsmbclient notRecompile
+
+      - name: Upload Config Log
+        if: failure() # Only upload log if the previous step fails
+        uses: actions/upload-artifact@v3
+        with:
+          name: config-log
+          path: /Users/runner/work/FFmpegKit/FFmpegKit/.Script/libsmbclient-samba-4.15.13/bin/config.log
