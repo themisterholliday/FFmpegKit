@@ -23,11 +23,17 @@ jobs:
           brew install python@3.11  # Install Python 3.11 using Homebrew
           brew link --overwrite python@3.11
 
+      - name: Install Build Tools and Libraries
+        run: |
+          brew install pkg-config # Install pkg-config which is often needed for building libraries
+          brew install openssl gmp nettle smbclient # Install necessary dependencies
+
       - name: Set Up Python Virtual Environment
         run: |
           python3 -m venv venv  # Create a virtual environment
           source venv/bin/activate  # Activate the virtual environment
-          python3 -m pip install --upgrade pip setuptools wheel  # Upgrade pip and install essential tools
+          python3 -m pip install --upgrade pip setuptools wheel  # Upgrade pip, setuptools, wheel
+          python3 -m pip install distutils  # Explicitly install distutils
 
       - name: Verify Python Environment
         run: |
@@ -44,8 +50,8 @@ jobs:
 
       - name: Build FFmpeg with Swift Package
         run: |
-          source venv/bin/activate  # Activate the virtual environment
           cd ${{ github.workspace }}  # Ensure we are in the GitHub Actions workspace
+          source venv/bin/activate  # Activate the virtual environment
           swift package --disable-sandbox BuildFFmpeg enable-libsmbclient notRecompile
 
       - name: Upload Config Log
