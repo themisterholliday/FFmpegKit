@@ -17,6 +17,11 @@ jobs:
         with:
           submodules: true
 
+      - name: Set up Python 3.11-dev
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11-dev'
+
       - name: Install Python 3 with Development Headers
         run: |
           brew update
