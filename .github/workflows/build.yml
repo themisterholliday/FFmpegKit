@@ -37,4 +37,4 @@ jobs:
       - name: Build FFmpeg with Swift Package
         run: |
           cd ${{ github.workspace }}  # Ensure we are in the GitHub Actions workspace
-          swift build --disable-sandbox BuildFFmpeg enable-gmp enable-nettle enable-libsmbclient
+          swift package --disable-sandbox BuildFFmpeg enable-libsmbclient notRecompile
