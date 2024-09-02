@@ -17,29 +17,30 @@ jobs:
         with:
           submodules: true
 
+      - name: Set up Python 3.11-dev
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11-dev'
+
       - name: Set up Xcode
         run: |
           sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
           xcode-select -p
           xcodebuild -version
 
-      - name: Install Python 3.10 with Development Headers
-        run: |
-          brew update
-          brew install python@3.10  # Installs Python 3.10 with development headers
-          brew link --overwrite python@3.10
-          echo 'export PATH="/usr/local/opt/python@3.10/bin:$PATH"' >> $GITHUB_ENV
+      - name: Install pipx
+        run: python3 -m pip install --user pipx && python3 -m pipx ensurepath
 
-      - name: Ensure Python Development Tools
+      - name: Install Python Development Tools using pipx
         run: |
-          # Set up environment variables to ensure proper build configuration
-          export PATH="/usr/local/opt/python@3.10/bin:$PATH"
-          export LDFLAGS="-L/usr/local/opt/python@3.10/lib"
-          export CPPFLAGS="-I/usr/local/opt/python@3.10/include"
-          python3 -m ensurepip --upgrade
-          python3 -m pip install --upgrade setuptools
+          pipx install setuptools  # Ensure setuptools is installed and updated
+          pipx inject setuptools wheel  # Install wheel, which is commonly needed for building Python packages
 
+      - name: Verify Python Environment
+        run: |
+          python3 -m pip list
+          python3 -m pip show setuptools
       - name: Build FFmpeg with Swift Package
         run: |
           cd ${{ github.workspace }}  # Ensure we are in the GitHub Actions workspace
-          swift package --disable-sandbox BuildFFmpeg enable-gmp enable-nettle enable-libsmbclient  # Replace with the actual Swift build command
+          swift package --disable-sandbox BuildFFmpeg enable-gmp enable-nettle enable-libsmbclient
