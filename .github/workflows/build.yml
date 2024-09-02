@@ -1,4 +1,4 @@
-name: Build and Export XCFrameworks
+name: Build and Test
 
 on:
   push:
@@ -6,32 +6,32 @@ on:
       - main
 
 jobs:
-  export_xcframeworks:
-    name: Export XCFrameworks
-    runs-on: macos-13
+  buidJoB:
+    name: Build
+    runs-on: macos-14
     steps:
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v2 # Correct syntax to checkout code
         with:
-          python-version: '3.11-dev'
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'true'
+          submodules: true
+
       - name: Set up Xcode
         run: |
           sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
           xcode-select -p
           xcodebuild -version
-      - name: Setup Python
+
+      - name: Ensure Python 3.10 is Installed
         run: |
-          python3 --version
-          brew install python-setuptools
-      - name: Export XCFrameworks
+          # Ensure Python 3.10 is installed with development headers
+          brew install python@3.10
+          brew link --overwrite python@3.10
+
+      - name: Set Environment Variables for Python and Xcode
         run: |
-          swift package --disable-sandbox BuildFFmpeg enable-libsmbclient
-          mkdir -p output
-          mv *.xcframework output/
-      - name: Upload XCFrameworks
-        uses: actions/upload-artifact@v2
-        with:
-          name: xcframeworks
-          path: output/*.xcframework
+          export PATH="/usr/local/opt/python@3.10/bin:$PATH"
+          export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
+          export MACOSX_DEPLOYMENT_TARGET=$(sw_vers -productVersion | cut -d '.' -f 1,2)
+
+      - name: Build FFmpeg with Swift Package
+        run: |
+          swift package BuildFFmpeg platforms=ios,isimulator,tvos,tvsimulator
