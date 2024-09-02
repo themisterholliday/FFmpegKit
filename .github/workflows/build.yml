@@ -26,7 +26,6 @@ jobs:
       - name: Install Build Tools and Libraries
         run: |
           brew install pkg-config # Install pkg-config which is often needed for building libraries
-          brew install openssl gmp nettle smbclient # Install necessary dependencies
 
       - name: Set Up Python Virtual Environment
         run: |
