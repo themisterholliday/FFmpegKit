@@ -22,6 +22,11 @@ jobs:
         with:
           python-version: '3.11-dev'
 
+      - name: Install Python Development Dependencies
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel  # Ensure pip, setuptools, wheel are up-to-date
+          brew install openssl readline sqlite3 xz zlib # Install Python dependencies via brew
+
       - name: Set up Xcode
         run: |
           sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
