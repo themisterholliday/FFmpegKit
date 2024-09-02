@@ -17,27 +17,24 @@ jobs:
         with:
           submodules: true
 
-      - name: Set up Python 3.11-dev
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11-dev'
-
-      - name: Install Python Development Dependencies
+      - name: Install Python 3 with Development Headers
         run: |
-          python3 -m pip install --upgrade pip setuptools wheel  # Ensure pip, setuptools, wheel are up-to-date
-          brew install openssl readline sqlite3 xz zlib # Install Python dependencies via brew
+          brew update
+          brew install python@3.11  # Install Python 3.11 using Homebrew
+          brew link --overwrite python@3.11
+          python3 -m pip install --upgrade pip setuptools wheel  # Upgrade pip and install essential tools
+
+      - name: Verify Python Environment
+        run: |
+          python3 --version
+          python3 -m pip list
+          python3 -m pip show setuptools
 
       - name: Set up Xcode
         run: |
           sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
           xcode-select -p
           xcodebuild -version
-
-      - name: Verify Python Environment
-        run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip list
-          python3 -m pip show setuptools
 
       - name: Build FFmpeg with Swift Package
         run: |
