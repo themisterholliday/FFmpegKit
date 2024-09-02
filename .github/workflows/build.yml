@@ -3,10 +3,13 @@ name: Build and Test
 on:
   push:
     branches:
-      - main
+      - '*'
+  pull_request:
+    branches:
+      - '*'
 
 jobs:
-  buidJoB:
+  buildJob:
     name: Build
     runs-on: macos-14
     steps:
@@ -20,18 +23,23 @@ jobs:
           xcode-select -p
           xcodebuild -version
 
-      - name: Ensure Python 3.10 is Installed
+      - name: Install Python 3.10 with Development Headers
         run: |
-          # Ensure Python 3.10 is installed with development headers
-          brew install python@3.10
+          brew update
+          brew install python@3.10  # Installs Python 3.10 with development headers
           brew link --overwrite python@3.10
+          echo 'export PATH="/usr/local/opt/python@3.10/bin:$PATH"' >> $GITHUB_ENV
 
-      - name: Set Environment Variables for Python and Xcode
+      - name: Ensure Python Development Tools
         run: |
+          # Set up environment variables to ensure proper build configuration
           export PATH="/usr/local/opt/python@3.10/bin:$PATH"
-          export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
-          export MACOSX_DEPLOYMENT_TARGET=$(sw_vers -productVersion | cut -d '.' -f 1,2)
+          export LDFLAGS="-L/usr/local/opt/python@3.10/lib"
+          export CPPFLAGS="-I/usr/local/opt/python@3.10/include"
+          python3 -m ensurepip --upgrade
+          python3 -m pip install --upgrade setuptools
 
       - name: Build FFmpeg with Swift Package
         run: |
-          swift package --disable-sandbox BuildFFmpeg platforms=ios,isimulator,tvos,tvsimulator notRecompile
+          cd ${{ github.workspace }}  # Ensure we are in the GitHub Actions workspace
+          swift package --disable-sandbox BuildFFmpeg enable-gmp enable-nettle enable-libsmbclient  # Replace with the actual Swift build command
